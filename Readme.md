@@ -15,13 +15,13 @@ curl 192.168.0.123/command -X POST -H "Content-Type: application/x-form-urlencod
 The following commands are known, more might be available:
 
 **command**         | **description**
---------------------+----------------
+------------------- | ---------------
 GETPRINTERSTATUS    | returns a JSON object with lots of information about the current status
 GETPRINTERINFO      | Info such as firmware version, IP address etc
 PAUSE               | pauses the current print
 RESUME              | resumes the current print, if paused
 PRINT               | takes unknown 2nd parameter, presumably prints
-GETJOBSTATUS        |
+GETJOBSTATUS        | gets job status
 
 ## Dremel Dashboard
 A web interface can be reached via
