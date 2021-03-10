@@ -2,6 +2,8 @@
 This repo lists features and information about the Dremel 3D45 3D-Printer which are not part of the official manual.
 Everything listed here comes with out any warranty, usage of that information is at your own risk!
 
+All examples below assume the IP address of the 3D45 is `10.41.50.65`. So you have to supplement this with your IP address.
+
 ## General information
 **Firmware Version**: v3.0_R02.10.09
 
@@ -9,7 +11,7 @@ Everything listed here comes with out any warranty, usage of that information is
 The printer provides a command API on port 80.
 It can be accessed using *curl* like so:
 ```
-curl 192.168.0.123/command -X POST -H "Content-Type: application/x-form-urlencoded" -d "GETPRINTERSTATUS"
+curl 10.41.50.65/command -X POST -H "Content-Type: application/x-form-urlencoded" -d "GETPRINTERSTATUS"
 ```
 
 The following commands are known, more might be available:
@@ -25,6 +27,12 @@ GETJOBSTATUS        | gets job status
 
 ## Dremel Dashboard
 A web interface can be reached via
-https://192.168.0.123:11134
+https://10.41.50.65:11134
 
 This is quite useful and provides lots of real-time information. A print can be started from it, but it cannot be stopped or paused.
+
+The dashboard includes a simple admin interface. Here the network configuration can be changed.
+Default credentials are:
+
+Username: `admin`
+Password: `password`
