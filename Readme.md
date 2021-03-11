@@ -36,3 +36,6 @@ Default credentials are:
 
 Username: `admin`
 Password: `password`
+
+## Simple control interface
+A simple control interface for the 3D45 (written in python) is defined in the file Control_3D45.py
