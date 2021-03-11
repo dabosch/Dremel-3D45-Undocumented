@@ -4,13 +4,16 @@ import requests
 import os
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
+from math import floor
+import imageio
 
 url = 'http://10.41.50.65'
 
 def main():
     global status
+    global printer_status, window
 
-    window = tk.Tk()
+    window = tk.Tk(className="3D45 Control Tool")
     
     frame1 = tk.Frame(master=window, width=400, height=400)
     frame1.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
@@ -20,8 +23,10 @@ def main():
     pauseButton = tk.Button(master=frame1,text="Pause Print",command=pause_print)
     resumeButton = tk.Button(master=frame1,text="Resume Print",command=resume_print)
     cancelButton = tk.Button(master=frame1,text="Cancel Print",command=cancel_print)
+    
 
-    status = tk.Label(master=frame1,text="Status",wraplength=350)
+    status = tk.Label(master=frame1,text="Status",wraplength=380,anchor="e", justify='left',font='TkFixedFont')
+    printer_status = tk.Label(master=frame1,text="printer_status",wraplength=380,anchor="e", justify='left',font='TkFixedFont')
 
     greeting.pack()
     ulButton.pack()
@@ -29,8 +34,12 @@ def main():
     resumeButton.pack()
     cancelButton.pack()
     status.pack()
+    printer_status.pack()
     window.resizable(width=False, height=False)
-    window.geometry('400x400')
+    window.geometry('500x600')
+
+    window.after(1, get_status)   # the delay is in milliseconds
+
     window.mainloop()
 
 
@@ -81,5 +90,50 @@ def cancel_print():
     else:
         status["text"] = "error: " + r.text
 
+def get_status():
+    data = {'GETPRINTERSTATUS':''}
+    r = requests.post(url + '/command', data=data)
+    if(eval(r.text)["error_code"] == 200):
+        
+            my_dict = eval(r.text)
+            if my_dict["door_open"] == 0:
+                door = "No"
+            else:
+                door = "Yes"
+
+            hr = floor(my_dict["elaspedtime"]/3600)
+            mn = floor(my_dict["elaspedtime"]/60) - hr*60
+            sc = my_dict["elaspedtime"] - hr*3600 - mn*60
+            r_hr = floor(my_dict["remaining"]/3600)
+            r_mn = floor(my_dict["remaining"]/60) - r_hr*60
+            r_sc = my_dict["remaining"] - r_hr*3600 - r_mn*60
+            
+
+            my_text = ""
+            my_text = "%s--------------------------------\n" % my_text
+            my_text = "%sJob name:  %s\n" % (my_text,my_dict["jobname"])
+            my_text = "%sJob status:            %s\n" % (my_text,my_dict["jobstatus"])
+            my_text = "%sDoor open:             %s\n" % (my_text,door)
+            my_text = "%sFilament Type:         %s\n" % (my_text,my_dict["filament_type "])
+            my_text = "%s\n" % (my_text)
+            my_text = "%sNozzle temp:           %3d°/%3d°\n" % (my_text,my_dict["temperature"],my_dict["extruder_target_temperature"])
+            my_text = "%sBuildplate temp:       %3d°/%3d°\n" % (my_text,my_dict["platform_temperature"],my_dict["buildPlate_target_temperature"])
+            my_text = "%sChamber temp:          %3d°\n" % (my_text,my_dict["chamber_temperature"])
+            my_text = "%s\n" % (my_text)
+            my_text = "%sElapsed time:          %2d:%02d:%02d\n" % (my_text,hr,mn,sc)
+            my_text = "%sRemaining time:        %2d:%02d:%02d\n" % (my_text,r_hr,r_mn,r_sc)
+            my_text = "%sProgress:              %5.1f%%\n" % (my_text,my_dict["progress"])
+            
+            my_text = "%s--------------------------------\n" % my_text
+            
+            
+
+   #         for k in my_dict.keys():
+   #             my_text = "{}\n{}: {}".format(my_text,k,my_dict[k])
+            printer_status["text"] = my_text
+            #status["text"] = "Cancelling print success!"
+    else:
+        printer_status["text"] = "error: " + r.text
+    window.after(1000, get_status)   # the delay is in milliseconds
 
 if __name__ == '__main__': main()
