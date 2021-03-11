@@ -4,6 +4,7 @@ import requests
 import os
 import tkinter as tk
 from tkinter.filedialog import askopenfilename
+import tkinter.messagebox
 from math import floor
 from PIL import ImageTk, Image
 import cv2
@@ -104,6 +105,11 @@ def resume_print():
         status["text"] = "error: " + r.text
 
 def cancel_print():
+
+    MsgBox = tk.messagebox.askquestion ('Cancel current print','Are you sure you want to cancel the current print?',icon = 'warning')
+    if MsgBox != 'yes':
+       return
+    
     data = {'CANCEL':''}
     r = requests.post(url + '/command', data=data)
     if(eval(r.text)["error_code"] == 200):
