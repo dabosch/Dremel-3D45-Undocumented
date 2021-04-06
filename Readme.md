@@ -39,3 +39,15 @@ Password: `password`
 
 ## Simple control interface
 A simple control interface for the 3D45 (written in python) is defined in the file Control_3D45.py
+
+Before running the first time you need to install the required packages:
+`python -m install requirements.txt`
+
+Then you can run the script:
+`python ./Control_3D45_Video.py`
+
+You can also build an executable using nuitka:
+```
+python -m pip install nuitka scons
+python -m nuitka ./Control_3D45_Video.py
+```

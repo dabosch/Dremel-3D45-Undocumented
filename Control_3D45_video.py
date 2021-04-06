@@ -9,7 +9,8 @@ from math import floor
 from PIL import ImageTk, Image
 import cv2
 
-url = 'http://10.41.50.65'
+# ENTER IP-ADDRESS OF YOUR PRINTER HERE
+url = 'http://1.2.3.4'
 timeout = 0.5
 
 def main():
